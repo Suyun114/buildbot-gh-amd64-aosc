@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: aosc/aosc-os
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upgrade host OS
+        run: apt update && apt upgrade -y
+
+      - name: Install Ciel
+        run: apt install ciel -y
+
+      - name: Initialize Ciel worksplace
+        run: |
+          mkdir -p /tmp/ciel && cd /tmp/ciel
+          expect ${GITHUB_WORKSPACE}/initialize-ciel.expect
+      
+      - name: Build!
+        run: |
+          cd /tmp/ciel
+          ciel build -i main flac
+      
+      - name: Artifact built packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-packages
+          path: /tmp/ciel/OUTPUT-stable

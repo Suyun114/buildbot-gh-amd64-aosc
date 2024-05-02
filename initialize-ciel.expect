@@ -1,0 +1,36 @@
+#!/usr/bin/expect
+
+spawn ciel new
+
+expect "Target Architecture"
+send "amd64\r"
+
+expect "Maintainer Information"
+send "GitHub Actions <action@github.com>\r"
+
+expect "Enable DNSSEC"
+send "y"
+
+expect "Edit sources.list"
+send "n"
+
+expect "Enable local sources caching"
+send "y"
+
+expect "Enable local packages repository"
+send "y"
+
+expect "Use different OUTPUT dir for different branches"
+send "y"
+
+expect "Use volatile mode for filesystem operations"
+send "y"
+
+expect "Do you want to add a new instance now?"
+send "y"
+
+expect "Name of the instance"
+send "main\r"
+
+expect eof
+set info [wait]
